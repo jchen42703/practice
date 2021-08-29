@@ -1,0 +1,47 @@
+// Imports
+import mongoose from "mongoose";
+require("dotenv").config();
+
+// Connect database
+export async function connect() {
+  console.info("SETUP - Connecting database..");
+
+  await connectWithRetry();
+}
+
+// Disconnect database
+export async function close() {
+  console.info("INFO - Disconnecting database..");
+
+  return await mongoose.connection.close();
+}
+
+// Drop database
+export async function drop() {
+  if (process.env.ENV === "development") {
+    console.info("INFO - Dropping database..");
+
+    return await mongoose.connection.dropDatabase();
+  }
+}
+
+// Handle connection error
+mongoose.connection.on("error", (error) => {
+  console.log(`ERROR - Connection failed: ${error.message}`);
+
+  setTimeout(async () => {
+    console.log("SETUP - Connecting database.. retrying..");
+
+    await connectWithRetry();
+  }, 5000);
+});
+
+// Retry connection
+const connectWithRetry = async () => {
+  return await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  });
+};
