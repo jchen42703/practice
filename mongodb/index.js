@@ -21,6 +21,7 @@ db.once("open", () => {
 });
 
 app.use(cors());
+app.use(require("./middlewares/auth"));
 
 app.set("port", process.env.PORT || 8080);
 
