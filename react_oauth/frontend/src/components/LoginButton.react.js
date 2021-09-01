@@ -1,16 +1,36 @@
 import React from "react";
 import { GoogleLogin } from "react-google-login";
-
+import axios from "axios";
+import config from "../utils/config";
 // refresh token
 // import { refreshTokenSetup } from "../utils/refreshToken";
 require("dotenv").config();
 
+console.log(`REACT_APP_AUTH_SECRET: ${process.env.REACT_APP_AUTH_SECRET}`);
 function LoginButton() {
-  const onSuccess = (res) => {
-    console.log("Login Success: currentUser:", res.profileObj);
-    alert(
-      `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
-    );
+  const onSuccess = async (res) => {
+    // console.log("Login Success: currentUser:", res.profileObj);
+    // console.log(`tokenId: ${res.tokenId}`);
+    // console.log(`accessToken: ${res.accessToken}`);
+    // console.log(`tokenObj: `, res.tokenObj);
+
+    try {
+      console.log("POST from Client");
+      const data = await axios.post(
+        `${config.serverUrl}/auth/verifyToken`,
+        {
+          tokenId: res.tokenId,
+        },
+        {
+          headers: {
+            "authorization-key": process.env.REACT_APP_AUTH_SECRET,
+          },
+        }
+      );
+      console.log("Data: ", data);
+    } catch (error) {
+      console.log(error);
+    }
     // refreshTokenSetup(res);
   };
 

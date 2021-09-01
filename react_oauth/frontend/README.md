@@ -2,9 +2,21 @@
 
 ## Success Object
 
-![](./images/loginSuccess.png)
+```
+Testing
+res.profileObj
+res.tokenId
+res.accessToken
+res.tokenObj
+```
 
-## Storage
+![](images/success.png)
+
+![](images/tokenObj.png)
+
+## Success from token verification
+
+![](images/tokenVerificationData.png)
 
 **Session storage**
 
